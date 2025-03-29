@@ -7,11 +7,11 @@
  * @param rings Number of hexagonal rings to generate.
  * @returns An array of [lat, lon] points.
  */
-export function generateHexSpiralPoints(centerLat: number, centerLon: number, rings: number): [number, number][] {
+export function generateHexSpiralPoints(centerLat: number, centerLon: number, rings: number, distance: number): [number, number][] {
     const points: [number, number][] = [];
     
     // Distance between centers in meters.
-    const a = 130;
+    const a = distance;
     
     // Conversion factors: approximate meters per degree.
     const metersPerDegLat = 111320;

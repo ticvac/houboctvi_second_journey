@@ -1,4 +1,6 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { count } from 'drizzle-orm';
+import { double } from 'drizzle-orm/mysql-core';
+import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
@@ -13,6 +15,36 @@ export const session = sqliteTable('session', {
 	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
 });
 
-export type Session = typeof session.$inferSelect;
+export const area = sqliteTable('area', {
+	id: text('id').primaryKey(),
+	lat: real('lat').notNull(),
+	lon: real('lon').notNull(),
+});
 
+export const ritual = sqliteTable('ritual', {
+	id: text('id').primaryKey(),
+	areaId: text('area_id').notNull().references(() => area.id),
+	lat: real('lat').notNull(),
+	lon: real('lon').notNull(),
+});
+
+export const seed = sqliteTable('seed', {
+	id: text('id').primaryKey(),
+	areaId: text('area_id').notNull().references(() => area.id),
+	count: integer('count').default(1),
+	lat: real('lat').notNull(),
+	lon: real('lon').notNull(),
+});
+
+export const userVisitedArea = sqliteTable('user_visited_area', {
+	id: text('id').primaryKey(),
+	userId: text('user_id').notNull().references(() => user.id),
+	areaId: text('area_id').notNull().references(() => area.id),
+});
+
+export type UserVisitedArea = typeof userVisitedArea.$inferSelect;
+export type Seed = typeof seed.$inferSelect;
+export type Ritual = typeof ritual.$inferSelect;
+export type Area = typeof area.$inferSelect;
+export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;

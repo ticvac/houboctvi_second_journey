@@ -3,19 +3,31 @@
   import { onMount } from "svelte";
   import type { GeolocationCoords } from "svelte-geolocation/Geolocation.svelte";
   import { generateRandomPoints } from '$lib/randomPoints';
+  import { generateMultipleRandomPoints } from '$lib/multipleRandomPoints';
 
   export let myPos:GeolocationCoords;
 
 
   // let location = [50.7004203, 15.4772036];
-  let location: [number, number] = [50.07600, 14.4190];
+  let location: [number, number] = [51.07600, 14.4190];
 
   let centerLat = location[0];
   let centerLng = location[1];
-  let spiral = generateHexSpiralPoints(centerLat, centerLng, 15);
+  let spiral = generateHexSpiralPoints(centerLat, centerLng, 20, 130);
 
   let radius = 100;
   const randomPoints = generateRandomPoints(spiral, radius);
+
+  let seeds = generateMultipleRandomPoints(
+    spiral,
+    radius,
+    location,
+    {
+      baseCount: 0,
+      distanceMultiplier: 0.002,
+      randomSpread: 0,
+    }
+  )
 
   import type { Map } from 'leaflet';
   let map: Map | null = null;
@@ -54,6 +66,18 @@
             weight: 1,
             radius: 5
         }).addTo(map!);
+    });
+
+    seeds.forEach((points) => {
+        points.forEach((point) => {
+            var circle = L.circle(point, {
+                color: 'yellow',
+                fillColor: 'yellow',
+                fillOpacity: 1,
+                weight: 1,
+                radius: 5
+            }).addTo(map!);
+        });
     });
   });
 </script>
