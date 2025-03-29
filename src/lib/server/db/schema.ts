@@ -1,6 +1,7 @@
 import { count } from 'drizzle-orm';
 import { double } from 'drizzle-orm/mysql-core';
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
 
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
@@ -40,6 +41,7 @@ export const userVisitedArea = sqliteTable('user_visited_area', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull().references(() => user.id),
 	areaId: text('area_id').notNull().references(() => area.id),
+	visitedAt: integer('visited_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`)
 });
 
 export type UserVisitedArea = typeof userVisitedArea.$inferSelect;

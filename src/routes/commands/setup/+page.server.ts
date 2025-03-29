@@ -14,11 +14,12 @@ export const load = async (event) => {
     await db.delete(seed).execute();
     await db.delete(area).execute();
     // creating new areas
-    let distance = 130;
-    let radius = 100;
+    let distance = 200;
+    let radius = 160;
+    let howMany = 22;
 
     let center: [number, number] = [50.7004203, 15.4772036];
-    let areaPoints = generateHexSpiralPoints(center[0], center[1], 20, distance);
+    let areaPoints = generateHexSpiralPoints(center[0], center[1], howMany, distance);
     let ritualPoints = generateRandomPoints(areaPoints, radius);
     let seedPoints = generateMultipleRandomPoints(
         areaPoints,

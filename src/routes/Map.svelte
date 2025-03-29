@@ -1,4 +1,12 @@
 <script lang="ts">
+  export let data;
+
+  const { areas } = data;
+  const { rituals} = data;
+  const { seeds } = data; 
+
+
+
   import { generateHexSpiralPoints } from '$lib/hexGrid';
   import { onMount } from "svelte";
   import type { GeolocationCoords } from "svelte-geolocation/Geolocation.svelte";
@@ -8,28 +16,12 @@
   export let myPos:GeolocationCoords;
 
 
-  // let location = [50.7004203, 15.4772036];
-  let location: [number, number] = [51.07600, 14.4190];
+  let location: [number, number] = [50.7004203, 15.4772036];
 
-  let centerLat = location[0];
-  let centerLng = location[1];
-  let spiral = generateHexSpiralPoints(centerLat, centerLng, 20, 130);
 
-  let radius = 100;
-  const randomPoints = generateRandomPoints(spiral, radius);
-
-  let seeds = generateMultipleRandomPoints(
-    spiral,
-    radius,
-    location,
-    {
-      baseCount: 0,
-      distanceMultiplier: 0.002,
-      randomSpread: 0,
-    }
-  )
 
   import type { Map } from 'leaflet';
+    import type { Area, Ritual, Seed } from '$lib/server/db/schema';
   let map: Map | null = null;
   onMount(async () => {
   
@@ -48,18 +40,21 @@
         radius: 50
     }).addTo(map);
 
-    spiral.forEach((point) => {
-        var circle = L.circle(point, {
+
+    console.log(areas)
+    areas.forEach((area: Area) => {
+        console.log(area);
+        var circle = L.circle([area.lat, area.lon], {
             color: 'blue',
             fillColor: 'blue',
             fillOpacity: 0.1,
             weight: 0.5,
-            radius: radius
+            radius: 160
         }).addTo(map!);
     });
 
-    randomPoints.forEach((point) => {
-        var circle = L.circle(point, {
+    rituals.forEach((ritual:Ritual) => {
+        var circle = L.circle([ritual.lat, ritual.lon], {
             color: 'red',
             fillColor: 'red',
             fillOpacity: 1,
@@ -68,18 +63,16 @@
         }).addTo(map!);
     });
 
-    seeds.forEach((points) => {
-        points.forEach((point) => {
-            var circle = L.circle(point, {
-                color: 'yellow',
-                fillColor: 'yellow',
-                fillOpacity: 1,
-                weight: 1,
-                radius: 5
-            }).addTo(map!);
-        });
-    });
+    seeds.forEach((seed: Seed) => {
+        var circle = L.circle([seed.lat, seed.lon], {
+            color: 'yellow',
+            fillColor: 'yellow',
+            fillOpacity: 1,
+            weight: 1,
+            radius: 5
+        }).addTo(map!);
   });
+}); 
 </script>
 
 

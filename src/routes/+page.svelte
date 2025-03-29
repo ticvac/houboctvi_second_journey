@@ -2,6 +2,7 @@
     import type { GeolocationCoords } from "svelte-geolocation/Geolocation.svelte";
     import Map from "./Map.svelte";
     import Geolocation from "svelte-geolocation";
+    export let data;
 
     let getPosition = false;
 
@@ -18,7 +19,7 @@
 
 </script>
 
-<Map myPos={coords} />
+<Map myPos={coords} data={data} />
 
 <div class="absolute bottom-0 left-0 p-4 text-white bg-blue-500 m-4 rounded-lg">
 
