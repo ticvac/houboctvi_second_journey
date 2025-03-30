@@ -7,7 +7,8 @@ export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
 	age: integer('age'),
 	username: text('username').notNull().unique(),
-	passwordHash: text('password_hash').notNull()
+	passwordHash: text('password_hash').notNull(),
+	seedsCollected: integer('seeds_collected').default(0),
 });
 
 export const session = sqliteTable('session', {
@@ -44,6 +45,14 @@ export const userVisitedArea = sqliteTable('user_visited_area', {
 	visitedAt: integer('visited_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`)
 });
 
+export const userVisibleRituals = sqliteTable('user_visible_rituals', {
+	id: text('id').primaryKey(),
+	userId: text('user_id').notNull().references(() => user.id),
+	ritualId: text('ritual_id').notNull().references(() => ritual.id),
+	visibleAt: integer('visible_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`)
+});
+
+export type UserVisibleRituals = typeof userVisibleRituals.$inferSelect;
 export type UserVisitedArea = typeof userVisitedArea.$inferSelect;
 export type Seed = typeof seed.$inferSelect;
 export type Ritual = typeof ritual.$inferSelect;

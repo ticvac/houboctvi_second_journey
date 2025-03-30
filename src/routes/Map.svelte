@@ -1,9 +1,9 @@
 <script lang="ts">
-  const { data, myPos } = $props();
+  const { rituals, areas, seeds, myPos } = $props();
 
-  const { areas } = data;
-  const { rituals } = data;
-  const { seeds } = data; 
+//   const { areas } = data;
+//   const { rituals } = data;
+//   const { seeds } = data; 
 
 
 
@@ -34,12 +34,13 @@
     if (!mapMarker) return;
     // set myPos to random location from initial +- 1000m
     mapMarker.setLatLng(myPos);
-    console.log("marker updated")
+    // console.log("marker updated")
     map.setView(myPos, 16);
     updateThings();
   }
 
   function updateThings() {
+    console.log("rituals_len", rituals.length);
 
 
     // remove all circles from map
