@@ -1,7 +1,6 @@
 // src/routes/setup/+page.server.ts
 import { db } from '$lib/server/db';
 import { area, ritual, seed, userVisibleRituals, userVisitedArea, user } from '$lib/server/db/schema';
-import { z } from 'zod';
 import { fail, redirect } from '@sveltejs/kit';
 import { generateHexSpiralPoints } from '$lib/hexGrid.js';
 import { generateRandomPoint, generateRandomPoints } from '$lib/randomPoints.js';

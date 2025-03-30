@@ -1,0 +1,18 @@
+# Node modules (installed locally)
+node_modules
+
+# Log files
+npm-debug.log
+yarn-error.log
+
+# Docker files (if you have multiple, adjust as needed)
+Dockerfile*
+docker-compose.yml
+
+# Git files
+.git
+.gitignore
+
+# Optional: Exclude tests and documentation if not needed in production
+tests
+docs

@@ -131,4 +131,4 @@
      crossorigin=""></script>
 </svelte:head>
   
-<div id="map" class="absolute z-[-10] h-dvh w-dvw"/>
+<div id="map" class="absolute z-[-10] h-dvh w-dvw"></div>
