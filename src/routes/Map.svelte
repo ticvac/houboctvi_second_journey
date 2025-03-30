@@ -1,8 +1,8 @@
 <script lang="ts">
-  export let data;
+  const { data, myPos } = $props();
 
   const { areas } = data;
-  const { rituals} = data;
+  const { rituals } = data;
   const { seeds } = data; 
 
 
@@ -12,22 +12,95 @@
   import type { GeolocationCoords } from "svelte-geolocation/Geolocation.svelte";
   import { generateRandomPoints } from '$lib/randomPoints';
   import { generateMultipleRandomPoints } from '$lib/multipleRandomPoints';
-
-  export let myPos:GeolocationCoords;
-
-
+  
+  var mapMarker: L.Marker;
+  var map: L.Map;
   let location: [number, number] = [50.7004203, 15.4772036];
 
 
+  let letMapAreas: L.Circle[] = [];
+  let letMapRituals: L.Circle[] = [];
+  let letMapSeeds: L.Circle[] = [];
 
-  import type { Map } from 'leaflet';
-    import type { Area, Ritual, Seed } from '$lib/server/db/schema';
-  let map: Map | null = null;
-  onMount(async () => {
   
+  $effect(() => {
+    console.log('myPosaaaa:', myPos);
+    updateMarker();
+  });
+  
+
+
+  function updateMarker() {
+    if (!mapMarker) return;
+    // set myPos to random location from initial +- 1000m
+    mapMarker.setLatLng(myPos);
+    console.log("marker updated")
+    map.setView(myPos, 16);
+    updateThings();
+  }
+
+  function updateThings() {
+
+
+    // remove all circles from map
+    letMapAreas.forEach((circle: L.Circle) => {
+        map!.removeLayer(circle);
+    });
+    letMapRituals.forEach((circle: L.Circle) => {
+        map!.removeLayer(circle);
+    });
+    letMapSeeds.forEach((circle: L.Circle) => {
+        map!.removeLayer(circle);
+    });
+    letMapAreas = [];
+    letMapRituals = [];
+    letMapSeeds = [];
+
+    areas.forEach((area: Area) => {
+        var circle = L.circle([area.lat, area.lon], {
+            color: 'blue',
+            fillColor: 'blue',
+            fillOpacity: 0.1,
+            weight: 0.5,
+            radius: 160
+        }).addTo(map!);
+        letMapAreas.push(circle);
+    });
+
+    rituals.forEach((ritual:Ritual) => {
+        var circle = L.circle([ritual.lat, ritual.lon], {
+            color: 'red',
+            fillColor: 'red',
+            fillOpacity: 1,
+            weight: 1,
+            radius: 5
+        }).addTo(map!);
+        letMapRituals.push(circle);
+    });
+
+    seeds.forEach((seed: Seed) => {
+        var circle = L.circle([seed.lat, seed.lon], {
+            color: 'yellow',
+            fillColor: 'yellow',
+            fillOpacity: 1,
+            weight: 1,
+            radius: 5
+        }).addTo(map!);
+        letMapSeeds.push(circle);
+  }); 
+
+  }
+  
+
+
+
+  
+    import type { Area, Ritual, Seed } from '$lib/server/db/schema';
+  onMount(async () => {
+    
     const leafletModule = await import('leaflet');
     let L = leafletModule.default;
-    map = L.map("map").setView(location, 16);
+    map = L.map("map").setView(myPos, 16);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 20,
             attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -40,38 +113,9 @@
         radius: 50
     }).addTo(map);
 
+    mapMarker = L.marker(myPos).addTo(map!);
+    updateThings();
 
-    console.log(areas)
-    areas.forEach((area: Area) => {
-        console.log(area);
-        var circle = L.circle([area.lat, area.lon], {
-            color: 'blue',
-            fillColor: 'blue',
-            fillOpacity: 0.1,
-            weight: 0.5,
-            radius: 160
-        }).addTo(map!);
-    });
-
-    rituals.forEach((ritual:Ritual) => {
-        var circle = L.circle([ritual.lat, ritual.lon], {
-            color: 'red',
-            fillColor: 'red',
-            fillOpacity: 1,
-            weight: 1,
-            radius: 5
-        }).addTo(map!);
-    });
-
-    seeds.forEach((seed: Seed) => {
-        var circle = L.circle([seed.lat, seed.lon], {
-            color: 'yellow',
-            fillColor: 'yellow',
-            fillOpacity: 1,
-            weight: 1,
-            radius: 5
-        }).addTo(map!);
-  });
 }); 
 </script>
 
