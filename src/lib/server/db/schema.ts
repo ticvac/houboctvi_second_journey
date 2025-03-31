@@ -52,6 +52,23 @@ export const userVisibleRituals = sqliteTable('user_visible_rituals', {
 	visibleAt: integer('visible_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`)
 });
 
+export const mushroom = sqliteTable('mushroom', {
+	id: text('id').primaryKey(),
+	name: text('name').notNull(),
+	toxicity: real('toxicity').notNull(),
+	color: text('color').notNull(),
+});
+
+export const userMushroomCount = sqliteTable('user_mushroom_count', {
+	id: text('id').primaryKey(),
+	userId: text('user_id').notNull().references(() => user.id),
+	mushroomId: text('mushroom_id').notNull().references(() => mushroom.id),
+	count: integer('count').default(1),
+});
+
+
+export type UserMushroomCount = typeof userMushroomCount.$inferSelect;
+export type Mushroom = typeof mushroom.$inferSelect;
 export type UserVisibleRituals = typeof userVisibleRituals.$inferSelect;
 export type UserVisitedArea = typeof userVisitedArea.$inferSelect;
 export type Seed = typeof seed.$inferSelect;

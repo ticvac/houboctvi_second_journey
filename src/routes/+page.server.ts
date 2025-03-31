@@ -5,11 +5,11 @@ export const load = async (event) => {
     const areas = await db.select().from(area);
     const rituals = await db.select().from(ritual);
     const seeds = await db.select().from(seed);
-    const userVisitedAreas = await db.select().from(userVisitedArea);
+    console.log('areas ----' , areas.length);
+    console.log("aaaaa - ")
     return {
         areas,
         rituals,
         seeds,
-        userVisitedAreas
     };
 }

@@ -29,33 +29,35 @@
 		info = "Loading...";
 
 		if ('geolocation' in navigator) {
-		navigator.geolocation.getCurrentPosition(
-			(position: GeolocationPosition) => {
-				console.log("updateSucess");
-				coords = [position.coords.latitude, position.coords.longitude];	
-				
-				
-				// unlock rituals (rituals in distance 300m)
-				// unlock areas (when on ritual)
-				// collect seeds (from unlocked areas, and on seed)
-				// update map
+			navigator.geolocation.getCurrentPosition(
+				(position: GeolocationPosition) => {
+					console.log("updateSucess");
+					coords = [position.coords.latitude, position.coords.longitude];
+					// move coords randonly by 1000m
+					coords = [coords[0] + (Math.random()-0.5) * 0.15, coords[1] + (Math.random()-0.5) * 0.15];
+					
+					
+					// unlock rituals (rituals in distance 300m)
+					// unlock areas (when on ritual)
+					// collect seeds (from unlocked areas, and on seed)
+					// update map
 
 
-				// coords = [50.7004203 - (Math.random()-0.5) * 0.06, 15.4772036 + (Math.random()-0.5) * 0.06];
-				info = `La: ${coords[0].toFixed(4)},\n Lo: ${coords[1].toFixed(4)}`;
-				
-				let form = document.querySelector('form');
-				form?.querySelector('input[name="lat"]')?.setAttribute('value', coords[0].toString());
-				form?.querySelector('input[name="lon"]')?.setAttribute('value', coords[1].toString());
+					// coords = [50.7004203 - (Math.random()-0.5) * 0.06, 15.4772036 + (Math.random()-0.5) * 0.06];
+					info = `La: ${coords[0].toFixed(4)},\n Lo: ${coords[1].toFixed(4)}`;
+					
+					let form = document.querySelector('form');
+					form?.querySelector('input[name="lat"]')?.setAttribute('value', coords[0].toString());
+					form?.querySelector('input[name="lon"]')?.setAttribute('value', coords[1].toString());
 
-				form?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-				
-			},
-			(error: GeolocationPositionError) => {
-				info = `Error, volej orgy.`;
-			},
-			{ enableHighAccuracy: true, timeout: 10 * 1000 * 1000, maximumAge: 0 }
-		);
+					form?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+					
+				},
+				(error: GeolocationPositionError) => {
+					info = `Error, volej orgy.`;
+				},
+				{ enableHighAccuracy: true, timeout:  100000, maximumAge: 0 }
+			);
 		} else {
 			info = "Geolocation is not supported.";
 		}
@@ -104,9 +106,9 @@
 	</form>
 </div>
 
-<div class="absolute bottom-0 right-0 p-4 text-white bg-yellow-500 m-4 rounded-lg">
+<a href="game/almanach" class="absolute bottom-0 right-0 p-4 text-white bg-yellow-500 m-4 rounded-lg">
 	{totalSeedsCollected}
-</div>
+</a>
 
 <div class="absolute top-0 right-0 p-4">
 	<form method="post" action="?/resetUserProgress">
