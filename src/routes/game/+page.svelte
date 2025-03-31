@@ -27,7 +27,7 @@
 
 	function updatePosition() {
 		info = "Loading...";
-
+ 
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(
 				(position: GeolocationPosition) => {
