@@ -4,3 +4,8 @@ services:
     ports:
       - "5173:5173"
     restart: unless-stopped
+    volumes:
+      - db-data:/app/local.db
+
+volumes:
+  db-data:
