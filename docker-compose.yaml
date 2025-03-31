@@ -5,7 +5,7 @@ services:
       - "5173:5173"
     restart: unless-stopped
     volumes:
-      - db-data:/app/data
+      - type: bind
+        source: ./local.db
+        target: /app/local.db
 
-volumes:
-  db-data:
