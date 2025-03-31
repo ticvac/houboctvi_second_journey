@@ -53,7 +53,8 @@
 			},
 			(error: GeolocationPositionError) => {
 				info = `Error, volej orgy.`;
-			}
+			},
+			{ enableHighAccuracy: true, timeout: 10 * 1000 * 1000, maximumAge: 0 }
 		);
 		} else {
 			info = "Geolocation is not supported.";

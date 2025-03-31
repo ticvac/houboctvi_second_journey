@@ -63,8 +63,8 @@ export const load: PageServerLoad = async (event) => {
 };
 
 const distanceToSeeRituals = 0.5;
-const distanceToPerformRituals = 0.01;
-const distanceToCollectSeeds = 0.01;
+const distanceToPerformRituals = 0.02;
+const distanceToCollectSeeds = 0.02;
 
 export const actions = {
     positionUpdate: async (event) => {
