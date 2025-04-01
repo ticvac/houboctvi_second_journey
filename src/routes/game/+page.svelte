@@ -9,12 +9,16 @@
 	import { invalidateAll } from '$app/navigation';
 	import { applyAction, deserialize } from '$app/forms';
 	import type { ActionResult } from '@sveltejs/kit'
+	import { persistStore } from '$lib/ppStore';
+
+	let userValueLat = persistStore('userLat', 0);
+	let userValueLon = persistStore('userLon', 0);
 
 
 	let { data }: { data: PageServerData } = $props();
 
 	
-	let coords: GeolocationCoords = $state([50.07600, 14.4190]);
+	let coords: GeolocationCoords = $state([$userValueLat, $userValueLon]);
 
 	let updatedRituals = $state(data.rituals);
 	let updatedAreas = $state(data.areas);
@@ -36,7 +40,8 @@
 					// move coords randonly by 1000m
 					coords = [coords[0] + (Math.random()-0.5) * 0.15, coords[1] + (Math.random()-0.5) * 0.15];
 					
-					
+					userValueLat.set(coords[0]);
+					userValueLon.set(coords[1]);	
 					// unlock rituals (rituals in distance 300m)
 					// unlock areas (when on ritual)
 					// collect seeds (from unlocked areas, and on seed)
@@ -72,8 +77,8 @@
 		const dataF = new FormData(event.currentTarget);
 
 		const response = await fetch(event.currentTarget.action, {
-		method: 'POST',
-		body: dataF
+			method: 'POST',
+			body: dataF
 		});
 		const result: ActionResult = deserialize(await response.text());
 
