@@ -61,7 +61,7 @@ export const load = async (event) => {
     let radius = 160;
     let howMany = 22;
 
-    let center: [number, number] = [50.0881, 14.3910];
+    let center: [number, number] = [50.7004203, 15.4772036];
     // let center: [number, number] = [50.7004203, 15.4772036];
     let areaPoints = generateHexSpiralPoints(center[0], center[1], howMany, distance);
     let ritualPoints = generateRandomPoints(areaPoints, radius);

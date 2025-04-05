@@ -6,7 +6,7 @@
 
 </script>
 
-<Map myPos={[50.0881, 14.3910]} rituals={rituals} seeds={seeds} areas={areas}/>
+<Map myPos={[50.7004203, 15.4772036]} rituals={rituals} seeds={seeds} areas={areas}/>
 
 
 

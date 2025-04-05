@@ -11,7 +11,8 @@
         <div class="bg-white shadow-md rounded-lg p-4 flex flex-col gap-4">
             <h2 class="font-bold">{item.name}</h2>
             <div>
-                {item.userCount} -> at {item.toxicity} toxicity
+                {item.userCount} 
+                <!-- -> at {item.toxicity} toxicity -->
             </div>
             <div class="p-2 rounded-md" style="background-color: {item.color};">{item.color}</div>
         </div>

@@ -1,8 +1,15 @@
 import { db } from '$lib/server/db';
 import { mushroom, userMushroomCount } from '$lib/server/db/schema.js';
 import { eq, sql, and } from 'drizzle-orm';
+import { fail, redirect } from '@sveltejs/kit';
+
 
 export const load = async (event) => {
+  if (!event.locals.user) {
+      console.log("User not found, redirecting to login");
+      return redirect(302, '/demo/lucia/login');
+  }
+
     const mmm = await db
   .select({
     id: mushroom.id,
