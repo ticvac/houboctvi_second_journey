@@ -33,6 +33,15 @@ let mushs = [
   
 
 export const load = async (event) => {
+    if (!event.locals.user) {
+        console.log("User not found, redirecting to login");
+        return redirect(302, '/demo/lucia/login');
+    }
+    if (event.locals.user.username != "user") {
+        console.log("user not admin");
+        return redirect(302, '/demo/lucia/login');
+    }
+
     // delete all areas
     await db.delete(userMushroomCount).execute();
     await db.delete(userVisibleRituals).execute();
