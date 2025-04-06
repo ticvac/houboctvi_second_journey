@@ -42,14 +42,16 @@ export const userVisitedArea = sqliteTable('user_visited_area', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull().references(() => user.id),
 	areaId: text('area_id').notNull().references(() => area.id),
-	visitedAt: integer('visited_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`)
+	visitedAt: integer('visited_at', { mode: 'timestamp' }).notNull()
+	.default(sql`(strftime('%s','now'))`),
 });
 
 export const userVisibleRituals = sqliteTable('user_visible_rituals', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull().references(() => user.id),
 	ritualId: text('ritual_id').notNull().references(() => ritual.id),
-	visibleAt: integer('visible_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`)
+	visibleAt: integer('visible_at', { mode: 'timestamp' }).notNull()
+	.default(sql`(strftime('%s','now'))`),
 });
 
 export const mushroom = sqliteTable('mushroom', {
@@ -77,7 +79,8 @@ export const userAlmanachAccess = sqliteTable('user_almanach_access', {
 export const locationEntry = sqliteTable('location_entry', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull().references(() => user.id),
-	time: integer('time', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
+	time: integer('time', { mode: 'timestamp' }).notNull()
+	.default(sql`(strftime('%s','now'))`),
 	lat: real('lat').notNull(),
 	lon: real('lon').notNull(),
 });

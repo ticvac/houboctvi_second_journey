@@ -2,11 +2,11 @@
     import Map from "./Map.svelte";
 
     let { data } = $props();
-    let { seeds, areas, rituals } = data;
+    let { seeds, areas, rituals, posledni_pozice } = data;
 
 </script>
 
-<Map myPos={[50.7004203, 15.4772036]} rituals={rituals} seeds={seeds} areas={areas}/>
+<Map myPos={[50.7004203, 15.4772036]} rituals={rituals} seeds={seeds} areas={areas} posledni_pozice={posledni_pozice}/>
 
 
 

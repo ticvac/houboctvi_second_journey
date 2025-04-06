@@ -1,5 +1,5 @@
 <script lang="ts">
-  const { rituals, areas, seeds, myPos } = $props();
+  const { rituals, areas, seeds, myPos, posledni_pozice } = $props();
 
 //   const { areas } = data;
 //   const { rituals } = data;
@@ -115,6 +115,21 @@
     }).addTo(map);
 
     mapMarker = L.marker(myPos).addTo(map!);
+
+    for (let d of posledni_pozice) {
+      let redIcon = L.icon({
+        iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        iconSize: [32, 32], // size of the icon
+        iconAnchor: [16, 32], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -32] // point from which the popup should open relative to the iconAnchor
+    });
+
+    let m = L.marker([d.lat, d.lon], { icon: redIcon }).addTo(map);
+    let sss = `${d.username}<br>${d.time}`;
+    m.bindPopup(sss);
+
+    }
+
     updateThings();
 
 }); 

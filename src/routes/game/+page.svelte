@@ -38,7 +38,7 @@
 					console.log("updateSucess");
 					coords = [position.coords.latitude, position.coords.longitude];
 					// move coords randonly by 1000m
-					coords = [coords[0] + (Math.random()-0.5) * 0.15, coords[1] + (Math.random()-0.5) * 0.15];
+					// coords = [coords[0] + (Math.random()-0.5) * 0.15, coords[1] + (Math.random()-0.5) * 0.15];
 					
 					userValueLat.set(coords[0]);
 					userValueLon.set(coords[1]);	
@@ -98,7 +98,7 @@
 
 </script>
 
-<Map myPos={coords} rituals={updatedRituals} seeds={updatedSeeds} areas={updatedAreas} />
+<Map myPos={coords} rituals={updatedRituals} seeds={updatedSeeds} areas={updatedAreas} posledni_pozice={[]}/>
 
 <div class="absolute bottom-0 left-0 p-4">
 	<form method="post" action="?/positionUpdate" onsubmit={handleSubmit}>
