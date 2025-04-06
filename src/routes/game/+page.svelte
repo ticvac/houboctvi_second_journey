@@ -38,7 +38,7 @@
 					console.log("updateSucess");
 					coords = [position.coords.latitude, position.coords.longitude];
 					// move coords randonly by 1000m
-					// coords = [coords[0] + (Math.random()-0.5) * 0.15, coords[1] + (Math.random()-0.5) * 0.15];
+					coords = [coords[0] + (Math.random()-0.5) * 0.15, coords[1] + (Math.random()-0.5) * 0.15];
 					
 					userValueLat.set(coords[0]);
 					userValueLon.set(coords[1]);	
@@ -111,7 +111,7 @@
 	</form>
 </div>
 
-<a href="game/almanach" class="absolute bottom-0 right-0 p-4 text-white bg-yellow-500 m-4 rounded-lg">
+<a href="game/inventory" class="absolute bottom-0 right-0 p-4 text-white bg-yellow-500 m-4 rounded-lg">
 	{totalSeedsCollected}
 </a>
 

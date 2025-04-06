@@ -2,7 +2,7 @@ import type Page from "../+page.svelte";
 import type { PageServerLoad } from "../demo/lucia/$types";
 import { fail, redirect } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { area, ritual, seed, userVisitedArea, userVisibleRituals, user, mushroom, userMushroomCount } from '$lib/server/db/schema';
+import { area, ritual, seed, userVisitedArea, userVisibleRituals, user, mushroom, userMushroomCount, userAlmanachAccess, type Mushroom, locationEntry } from '$lib/server/db/schema';
 import { eq, and, type SQLWrapper } from 'drizzle-orm';
 
 function haversineDistance(lat1:number, lon1:number, lat2:number, lon2:number) {
@@ -63,15 +63,22 @@ export const load: PageServerLoad = async (event) => {
 };
 
 const distanceToSeeRituals = 0.8;
-const distanceToPerformRituals = 0.03;
-const distanceToCollectSeeds = 0.03;
+const distanceToPerformRituals = 0.3;
+const distanceToCollectSeeds = 0.3;
 
 export const actions = {
     positionUpdate: async (event) => {
         console.log("Action called");
         const data = await event.request.formData();
         const lat = parseFloat(data.get('lat') as string) || 0;
-        const lon = parseFloat(data.get('lon') as string) || 0; 
+        const lon = parseFloat(data.get('lon') as string) || 0;
+        // save location entry
+        await db.insert(locationEntry).values({
+            id: crypto.randomUUID(),
+            userId: event.locals.user!.id,
+            lat: lat,
+            lon: lon,
+        });
         // unlock rituals
         const rituals = await db.select()
             .from(ritual)
@@ -131,33 +138,59 @@ export const actions = {
                     await db.delete(seed).where(eq(seed.id, myseed.id));
                     const Iuser = await db.select().from(user).where(eq(user.id, event.locals.user!.id));
                     const me = Iuser[0];
-                    await db.update(user).set({
-                        seedsCollected: (me.seedsCollected ?? 0) + 1,
-                    }).where(eq(user.id, event.locals.user!.id));
-                    // add random mushroom to user
-                    const mushrooms = await db.select().from(mushroom);
-                    const randomMushroom = mushrooms[Math.floor(Math.random() * mushrooms.length)];
-                    // check if mushroom is already in userMushroomCount
-                    const alreadyHasMushroom = await db.select()
-                        .from(userMushroomCount)
-                        .where(and(
-                            eq(userMushroomCount.userId, event.locals.user!.id),
-                            eq(userMushroomCount.mushroomId, randomMushroom.id)
-                        ));
-                    if (alreadyHasMushroom.length == 0) {
-                        await db.insert(userMushroomCount).values({
-                            id: crypto.randomUUID(),
-                            userId: event.locals.user!.id,
-                            mushroomId: randomMushroom.id,
-                            count: 1,
-                        });
-                    } else {
-                        await db.update(userMushroomCount).set({
-                            count: (alreadyHasMushroom[0].count ?? 0) + 1,
-                        }).where(and(
-                            eq(userMushroomCount.userId, event.locals.user!.id),
-                            eq(userMushroomCount.mushroomId, randomMushroom.id)
-                        ));
+                    // jak casto najdou stranku
+                    if (Math.random() > 0.9) {
+                        console.log("almanaaaach")
+                        const mushrooms = await db.select().from(mushroom);
+                        while(true) {
+                            // check if exits
+                            let one_mushroom = mushrooms[Math.floor(Math.random() * mushrooms.length)]
+                            let does_exists = await db.select().from(userAlmanachAccess)
+                                .where(and(
+                                    eq(userAlmanachAccess.userId, me.id),
+                                    eq(userAlmanachAccess.mushroomId, one_mushroom.id)
+                                ));
+                            if (does_exists.length == 0) {
+                                await db.insert(userAlmanachAccess).values({
+                                    id: crypto.randomUUID(),
+                                    userId: me.id,
+                                    mushroomId: one_mushroom.id
+                                });
+                                break;
+                            }
+                        }
+
+                    } else { // nasel houbu
+
+                        await db.update(user).set({
+                            seedsCollected: (me.seedsCollected ?? 0) + 1,
+                        }).where(eq(user.id, event.locals.user!.id));
+                        // add random mushroom to user
+                        const mushrooms = await db.select().from(mushroom);
+                        const randomMushroom = mushrooms[Math.floor(Math.random() * mushrooms.length)];
+                        // check if mushroom is already in userMushroomCount
+                        const alreadyHasMushroom = await db.select()
+                            .from(userMushroomCount)
+                            .where(and(
+                                eq(userMushroomCount.userId, event.locals.user!.id),
+                                eq(userMushroomCount.mushroomId, randomMushroom.id)
+                            ));
+                        if (alreadyHasMushroom.length == 0) {
+                            await db.insert(userMushroomCount).values({
+                                id: crypto.randomUUID(),
+                                userId: event.locals.user!.id,
+                                mushroomId: randomMushroom.id,
+                                count: 1,
+                            });
+                        } else {
+                            await db.update(userMushroomCount).set({
+                                count: (alreadyHasMushroom[0].count ?? 0) + 1,
+                            }).where(and(
+                                eq(userMushroomCount.userId, event.locals.user!.id),
+                                eq(userMushroomCount.mushroomId, randomMushroom.id)
+                            ));
+                        }
+
                     }
                 }
             }
@@ -196,6 +229,8 @@ export const actions = {
             seedsCollected: 0,
         }).where(eq(user.id, userId));
         // delete all user visible rituals
+        await db.delete(locationEntry).where(eq(locationEntry.userId, userId));
+        await db.delete(userAlmanachAccess).where(eq(userAlmanachAccess.userId, userId))
         await db.delete(userVisibleRituals).where(eq(userVisibleRituals.userId, userId));
         // delete all user visited areas
         await db.delete(userVisitedArea).where(eq(userVisitedArea.userId, userId));

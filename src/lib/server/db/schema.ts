@@ -55,8 +55,10 @@ export const userVisibleRituals = sqliteTable('user_visible_rituals', {
 export const mushroom = sqliteTable('mushroom', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
+	file_name: text('file_name').notNull(),
 	toxicity: real('toxicity').notNull(),
 	color: text('color').notNull(),
+	info: text('info').notNull(),
 });
 
 export const userMushroomCount = sqliteTable('user_mushroom_count', {
@@ -66,7 +68,23 @@ export const userMushroomCount = sqliteTable('user_mushroom_count', {
 	count: integer('count').default(1),
 });
 
+export const userAlmanachAccess = sqliteTable('user_almanach_access', {
+	id: text('id').primaryKey(),
+	userId: text('user_id').notNull().references(() => user.id),
+	mushroomId: text('mushroom_id').notNull().references(() => mushroom.id),
+});
 
+export const locationEntry = sqliteTable('location_entry', {
+	id: text('id').primaryKey(),
+	userId: text('user_id').notNull().references(() => user.id),
+	time: integer('time', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
+	lat: real('lat').notNull(),
+	lon: real('lon').notNull(),
+});
+
+
+export type LocationEntry = typeof locationEntry.$inferSelect;
+export type UserAlmanachAccess = typeof userAlmanachAccess.$inferSelect;
 export type UserMushroomCount = typeof userMushroomCount.$inferSelect;
 export type Mushroom = typeof mushroom.$inferSelect;
 export type UserVisibleRituals = typeof userVisibleRituals.$inferSelect;

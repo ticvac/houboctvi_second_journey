@@ -1,6 +1,6 @@
 // src/routes/setup/+page.server.ts
 import { db } from '$lib/server/db';
-import { area, ritual, seed, userVisibleRituals, userVisitedArea, user, userMushroomCount, mushroom } from '$lib/server/db/schema';
+import { area, ritual, seed, userVisibleRituals, userVisitedArea, user, userMushroomCount, mushroom, userAlmanachAccess, locationEntry } from '$lib/server/db/schema';
 import { fail, redirect } from '@sveltejs/kit';
 import { generateHexSpiralPoints } from '$lib/hexGrid.js';
 import { generateRandomPoint, generateRandomPoints } from '$lib/randomPoints.js';
@@ -9,26 +9,15 @@ import { eq } from 'drizzle-orm';
 
 
 let mushs = [
-    {"name": "Hobitovka snovitá", "toxicity": 0.23, "color": "#e6194b"},
-    {"name": "Shirská chmurka", "toxicity": 0.47, "color": "#3cb44b"},
-    {"name": "Mechová perla", "toxicity": 0.12, "color": "#ffe119"},
-    {"name": "Lesní šepotka", "toxicity": 0.89, "color": "#0082c8"},
-    {"name": "Podhorská bublina", "toxicity": 0.34, "color": "#f58231"},
-    {"name": "Zářící nočnice", "toxicity": 0.56, "color": "#911eb4"},
-    {"name": "Kouzelná plodnice", "toxicity": 0.78, "color": "#46f0f0"},
-    {"name": "Středozemská duhovka", "toxicity": 0.05, "color": "#f032e6"},
-    {"name": "Hvězdná houbička", "toxicity": 0.91, "color": "#d2f53c"},
-    {"name": "Květinová radost", "toxicity": 0.66, "color": "#fabebe"},
-    {"name": "Jantarový zázrak", "toxicity": 0.28, "color": "#008080"},
-    {"name": "Hobití záře", "toxicity": 0.73, "color": "#e6beff"},
-    {"name": "Kouzelná baňka", "toxicity": 0.15, "color": "#aa6e28"},
-    {"name": "Podzimní stínka", "toxicity": 0.44, "color": "#fffac8"},
-    {"name": "Zahradní tajemství", "toxicity": 0.62, "color": "#800000"},
-    {"name": "Ranní kapka", "toxicity": 0.37, "color": "#aaffc3"},
-    {"name": "Stříbrná mlhovka", "toxicity": 0.99, "color": "#808000"},
-    {"name": "Noční posvátnost", "toxicity": 0.50, "color": "#ffd8b1"},
-    {"name": "Kouzelná hvězda", "toxicity": 0.81, "color": "#000080"},
-    {"name": "Podivná záře", "toxicity": 0.09, "color": "#808080"}
+    {"file_name": "palivka_rychlocasa.png", "name": "Pálivka Rychločasá", "toxicity": 0.01, "color": "#ff0000", "text": "Velmi zvláštní houba. Poznáte ji díky jejímu ohnivému vzhledu. Kloubouk i nohu má rudou a pokud ji promnete v rukou, ucítíte mírné teplo.\n\nJe těžké narazit na čerstvou Pálivku Rychločasou. Vyroste a zplesniví během několika hodin. Odhodlaní houbaři vyrážejí do lesů hned, jak skončí letní či jarní deštík a hledají čerstvě vyrostlé „Rychlovky“, jak jim někteří přezdívají. Tento název se pravděpodobně poprvé začal používat v Hůrce, kde Dorli Bulidor, místní hobit mastičkář, poprvé zkusil Rychlovku velmi rychle nadrtit a poté smíchat s čerstvým býlím.\n\nUkázalo se, že bylinky, které by se musely sušit dlouhé týdny se téměř okamžitě usušily, zatímco Rychlovka se prakticky celá vlastním teplem vypařila. Rychlovka se tak začala používat ne na jídlo, ve kterém sice nezpůsobovala žádné neblahé zdravotní problémy, pouze nechutnou trpkou chuť, a začala se používat na rychlé sušení jakékoliv byliny či houby."},
+    {"file_name": "name", "name": "Hobitovka snovitá", "toxicity": 0.23, "color": "#e6194b", "text": "empty"},
+    {"file_name": "name", "name": "Shirská chmurka", "toxicity": 0.47, "color": "#3cb44b", "text": "empty"},
+    {"file_name": "name", "name": "Mechová perla", "toxicity": 0.12, "color": "#ffe119", "text": "empty"},
+    {"file_name": "name", "name": "Lesní šepotka", "toxicity": 0.89, "color": "#0082c8", "text": "empty"},
+    {"file_name": "name", "name": "Podhorská bublina", "toxicity": 0.34, "color": "#f58231", "text": "empty"},
+    {"file_name": "name", "name": "Zářící nočnice", "toxicity": 0.56, "color": "#911eb4", "text": "empty"},
+    {"file_name": "name", "name": "Kouzelná plodnice", "toxicity": 0.78, "color": "#46f0f0", "text": "empty"},
+
 ];
   
 
@@ -43,6 +32,8 @@ export const load = async (event) => {
     }
 
     // delete all areas
+    await db.delete(locationEntry).execute();
+    await db.delete(userAlmanachAccess).execute();
     await db.delete(userMushroomCount).execute();
     await db.delete(userVisibleRituals).execute();
     await db.delete(userVisitedArea).execute();
@@ -60,8 +51,10 @@ export const load = async (event) => {
         await db.insert(mushroom).values({
             id: crypto.randomUUID(),
             name: mush.name,
+            file_name: mush.file_name,
             toxicity: mush.toxicity,
-            color: mush.color
+            color: mush.color,
+            info: mush.text,
         });
     }
 

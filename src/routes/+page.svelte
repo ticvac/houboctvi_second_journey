@@ -10,6 +10,6 @@
 
 
 
-<a href="/almanach" class="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-lg m-4">
+<a href="/inventory" class="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-lg m-4">
     Almanach
 </a>
