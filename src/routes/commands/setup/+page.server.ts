@@ -161,7 +161,7 @@ export const load = async (event) => {
         console.log("User not found, redirecting to login");
         return redirect(302, '/demo/lucia/login');
     }
-    if (event.locals.user.username != "user") {
+    if (event.locals.user.username != "user_deleter") {
         console.log("user not admin");
         return redirect(302, '/demo/lucia/login');
     }

@@ -23,6 +23,7 @@
 	let updatedRituals = $state(data.rituals);
 	let updatedAreas = $state(data.areas);
 	let updatedSeeds = $state(data.seeds);
+	let should_reset = $state(data.should_reset);
 
 	let totalSeedsCollected = $state(data.seedsCollected);
 
@@ -115,6 +116,7 @@
 	{totalSeedsCollected}
 </a>
 
+{#if should_reset}
 <div class="absolute top-0 right-0 p-4">
 	<form method="post" action="?/resetUserProgress">
 		<button type="submit" class="bg-red-500 rounded-lg text-white px-2 py-1 cursor-pointer">
@@ -122,3 +124,5 @@
 		</button>
 	</form>
 </div>
+{/if}
+

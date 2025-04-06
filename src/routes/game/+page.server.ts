@@ -52,8 +52,10 @@ export const load: PageServerLoad = async (event) => {
     const Iuser = await db.select()
     .from(user)
     .where(eq(user.id, event.locals.user!.id)); 
+
     
     return {
+        should_reset: event.locals.user.username == "user",
         user: event.locals.user,
         areas: areasOnly,
         rituals: ritualsOnly,
@@ -245,7 +247,10 @@ export const actions = {
         const Iuser = await db.select()
             .from(user)
             .where(eq(user.id, event.locals.user!.id));
+        
+        
         return {
+            
             rituals: ritualsOnly,
             areas: areasOnly,
             seeds: seedsOnly,
