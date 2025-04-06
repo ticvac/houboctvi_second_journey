@@ -63,7 +63,7 @@
             fillColor: 'blue',
             fillOpacity: 0.1,
             weight: 0.5,
-            radius: 160
+            radius: 100
         }).addTo(map!);
         letMapAreas.push(circle);
     });

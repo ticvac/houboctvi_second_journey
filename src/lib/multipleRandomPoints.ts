@@ -60,7 +60,7 @@ export function generateMultipleRandomPoints(
   return points.map(point => {
     const dist = distanceFromCenter(point);
     // Expected number of random points increases with distance.
-    const expectedCount = baseCount + dist * distanceMultiplier;
+    const expectedCount = baseCount + dist * distanceMultiplier * (dist/10 * distanceMultiplier + 1);
     // Vary the count randomly: factor in the range [1 - randomSpread, 1 + randomSpread].
     const factor = 1 + (Math.random() * 2 * randomSpread - randomSpread);
     const count = Math.max(1, Math.round(expectedCount * factor));
