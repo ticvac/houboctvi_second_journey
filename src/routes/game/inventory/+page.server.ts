@@ -14,8 +14,6 @@ export const load = async (event) => {
   .select({
     id: mushroom.id,
     name: mushroom.name,
-    toxicity: mushroom.toxicity,
-    color: mushroom.color,
     file_name: mushroom.file_name,
     userCount: sql<number>`COALESCE(COUNT(${userMushroomCount.mushroomId}), 0)`,
     can_access: sql<boolean>`false`,

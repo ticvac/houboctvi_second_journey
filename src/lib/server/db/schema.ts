@@ -58,9 +58,10 @@ export const mushroom = sqliteTable('mushroom', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	file_name: text('file_name').notNull(),
-	toxicity: real('toxicity').notNull(),
-	color: text('color').notNull(),
-	info: text('info').notNull(),
+	unsanity: text('unsanity').notNull(),
+	tastyfulness: text('tastyfulness').notNull(),
+	rarity: text('rarity').notNull(),
+	almanach: text('info').notNull(),
 });
 
 export const userMushroomCount = sqliteTable('user_mushroom_count', {
