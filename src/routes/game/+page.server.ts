@@ -3,7 +3,7 @@ import type { PageServerLoad } from "../demo/lucia/$types";
 import { fail, redirect } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { area, ritual, seed, userVisitedArea, userVisibleRituals, user, mushroom, userMushroomCount, userAlmanachAccess, type Mushroom, locationEntry } from '$lib/server/db/schema';
-import { eq, and, type SQLWrapper } from 'drizzle-orm';
+import { eq, and, type SQLWrapper, desc } from 'drizzle-orm';
 
 function haversineDistance(lat1:number, lon1:number, lat2:number, lon2:number) {
 	const R = 6371; // Radius of the Earth in kilometers
@@ -170,8 +170,36 @@ export const actions = {
                             seedsCollected: (me.seedsCollected ?? 0) + 1,
                         }).where(eq(user.id, event.locals.user!.id));
                         // add random mushroom to user
-                        const mushrooms = await db.select().from(mushroom);
-                        const randomMushroom = mushrooms[Math.floor(Math.random() * mushrooms.length)];
+                        const mushrooms = await db.select().from(mushroom).orderBy(mushroom.rarity);
+                        const aaaaa = 30;
+                        const totalRarity = mushrooms.reduce((acc, m) => acc + (aaaaa - m.rarity), 0);
+
+                        let rozdeleni:number[] = []
+                        for (let i = 0; i < mushrooms.length; i++) {
+                            const m = mushrooms[i];
+                            if (rozdeleni.length == 0) {
+                                console.log((aaaaa - m.rarity) / totalRarity)
+                                rozdeleni.push((aaaaa - m.rarity) / totalRarity)
+                            } else {
+                                rozdeleni.push((aaaaa - m.rarity) / totalRarity + rozdeleni[i-1])
+                            }
+                        }
+                        let randomMushroom = mushrooms[Math.floor(Math.random() * mushrooms.length)];
+
+                        const value = Math.random()
+                        let k = 0;
+                        while(true) {
+                            if (value < rozdeleni[k]) {
+                                randomMushroom = mushrooms[k];
+                                break;
+                            }
+                            k++
+                        }
+
+                        
+                        
+                        
+                        
                         // check if mushroom is already in userMushroomCount
                         const alreadyHasMushroom = await db.select()
                             .from(userMushroomCount)

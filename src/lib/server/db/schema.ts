@@ -58,9 +58,9 @@ export const mushroom = sqliteTable('mushroom', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	file_name: text('file_name').notNull(),
-	unsanity: text('unsanity').notNull(),
-	tastyfulness: text('tastyfulness').notNull(),
-	rarity: text('rarity').notNull(),
+	unsanity: integer('unsanity').notNull(),
+	tastyfulness: integer('tastyfulness').notNull(),
+	rarity: integer('rarity').notNull(),
 	almanach: text('info').notNull(),
 });
 

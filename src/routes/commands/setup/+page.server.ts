@@ -187,9 +187,9 @@ export const load = async (event) => {
             id: crypto.randomUUID(),
             name: mush.name,
             file_name: mush.filename,
-            unsanity: mush.sanity,
-            tastyfulness: mush.tastefulnes,
-            rarity: mush.rarity,
+            unsanity: parseInt(mush.sanity),
+            tastyfulness: parseInt(mush.tastefulnes),
+            rarity: parseInt(mush.rarity),
             almanach: mush.almanach,
         });
     }
