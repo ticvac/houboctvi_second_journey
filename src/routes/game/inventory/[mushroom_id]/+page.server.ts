@@ -21,7 +21,7 @@ export const load = async (event) => {
     
     return {
         "mushroom": mmm[0],
-        "info": mmm[0].almanach.replaceAll("\n", "<br>"),
+        "info": mmm[0].almanach.replaceAll("\n", "<br><br>"),
         "can_access": access.length > 0 ? true : false,
     };
 };

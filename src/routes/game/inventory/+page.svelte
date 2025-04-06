@@ -1,6 +1,6 @@
 <script lang="ts">
     let { data } = $props();
-    let { almanach } = data;
+    let { almanach, al_count } = data;
 
 </script>
 
@@ -23,6 +23,9 @@
 
 
 <h1 class="font-bold m-4 text-4xl">Inventory</h1>
+
+<h2 class="font-bold ml-4">Total pages from almanach found: {al_count}/ 16</h2>
+<h2 class="font-bold ml-4 mt-4">Mushrooms found: {almanach.length}/ 16</h2>
 
 <div style="justify-items: center;" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-4 items-center justify-center">
     {#each almanach as item}

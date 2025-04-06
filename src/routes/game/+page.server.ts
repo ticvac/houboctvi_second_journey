@@ -139,7 +139,11 @@ export const actions = {
                     const Iuser = await db.select().from(user).where(eq(user.id, event.locals.user!.id));
                     const me = Iuser[0];
                     // jak casto najdou stranku
-                    if (Math.random() > 0.9) {
+                    const eee = await db.select().from(userAlmanachAccess)
+                    .where(
+                        eq(userAlmanachAccess.userId, me.id),
+                    );
+                    if (Math.random() > 0.75 && eee.length != 16) {
                         console.log("almanaaaach")
                         const mushrooms = await db.select().from(mushroom);
                         while(true) {

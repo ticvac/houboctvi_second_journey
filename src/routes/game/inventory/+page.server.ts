@@ -29,6 +29,10 @@ export const load = async (event) => {
   .groupBy(mushroom.id)
   .having(sql`COUNT(${userMushroomCount.mushroomId}) > 0`);
 
+
+  let almanachs = (await db.select().from(userAlmanachAccess)
+  .where(eq(userAlmanachAccess.userId, event.locals.user!.id))).length;
+
     for (let i = 0; i < mmm.length; i++) {
         let count = await db
             .select()
@@ -50,5 +54,6 @@ export const load = async (event) => {
         
     return {
         almanach: mmm,
+        al_count: almanachs,
     };
 };
