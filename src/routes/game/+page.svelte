@@ -20,6 +20,8 @@
 	
 	let coords: GeolocationCoords = $state([$userValueLat, $userValueLon]);
 
+	
+
 	let updatedRituals = $state(data.rituals);
 	let updatedAreas = $state(data.areas);
 	let updatedSeeds = $state(data.seeds);
@@ -96,6 +98,14 @@
 
 		applyAction(result);
 	}
+
+	onMount(async () => {
+		let form = document.querySelector('form');
+		form?.querySelector('input[name="lat"]')?.setAttribute('value', coords[0].toString());
+		form?.querySelector('input[name="lon"]')?.setAttribute('value', coords[1].toString());
+		info = `La: ${coords[0].toFixed(4)},\n Lo: ${coords[1].toFixed(4)}`;
+		console.log("seting?")
+	});
 
 </script>
 

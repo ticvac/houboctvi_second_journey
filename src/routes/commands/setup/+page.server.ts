@@ -195,9 +195,9 @@ export const load = async (event) => {
     }
 
     // creating new areas
-    let distance = 120;
-    let radius = 100;
-    let howMany = 30;
+    let distance = 260;
+    let radius = 200;
+    let howMany = 20;
 
     let center: [number, number] = [50.7004203, 15.4772036];
     // let center: [number, number] = [50.7004203, 15.4772036];
